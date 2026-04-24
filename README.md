@@ -16,6 +16,7 @@ A Dockerized Retrieval-Augmented Generation (RAG) platform built with FastAPI, O
 - `Dockerfile` - container image build definition
 - `docker-compose.yml` - local deployment with Redis
 - `.dockerignore` - Docker ignored files
+- `sample_data/sample.txt` - sample document for upload testing
 
 ## Setup
 
@@ -39,6 +40,14 @@ A Dockerized Retrieval-Augmented Generation (RAG) platform built with FastAPI, O
    source venv/bin/activate
    pip install -r requirements.txt
    ```
+
+4. Use the provided sample file to test ingestion:
+
+   ```bash
+   cat sample_data/sample.txt
+   ```
+
+   Upload `sample_data/sample.txt` using the frontend upload panel.
 
 4. Run the API locally:
 

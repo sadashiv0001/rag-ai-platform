@@ -1,6 +1,7 @@
 import logging
 from typing import List, Optional
 from fastapi import FastAPI, UploadFile, File, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -19,6 +20,14 @@ from app.config import LOG_LEVEL
 logging.basicConfig(level=LOG_LEVEL, format="%(asctime)s | %(levelname)s | %(name)s | %(message)s")
 logger = logging.getLogger("rag_ai_platform")
 app = FastAPI(title="rag-ai-platform")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 

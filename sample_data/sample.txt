@@ -1,0 +1,14 @@
+This is a sample knowledge file for the RAG AI Platform.
+
+Use this document to test ingestion and see how the chat assistant answers questions based on uploaded content.
+
+Example content:
+
+- The platform supports PDF, Excel, CSV, PLT, and TXT uploads.
+- Uploaded documents are converted into searchable chunks and stored in PostgreSQL with pgvector.
+- Chat sessions are persisted so you can continue a conversation.
+
+Ask the assistant:
+- "What file types does this system support?"
+- "How does the RAG pipeline work?"
+- "What is the sample content used for?"

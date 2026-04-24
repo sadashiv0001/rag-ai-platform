@@ -38,6 +38,31 @@ body {
     /* Placeholder for chat history */
 }
 
+.upload-panel {
+    margin-top: 20px;
+    background-color: #343541;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #565869;
+}
+
+.upload-panel h2 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+}
+
+.upload-panel input,
+.upload-panel button {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.upload-panel p {
+    margin: 0;
+    font-size: 14px;
+    color: #c1c1c1;
+}
+
 .chat-area {
     flex: 1;
     display: flex;
@@ -52,22 +77,73 @@ body {
 
 .message {
     margin-bottom: 20px;
-    padding: 10px;
-    border-radius: 10px;
-    max-width: 80%;
+    padding: 14px;
+    border-radius: 16px;
+    max-width: 75%;
+    position: relative;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 .message.user {
-    background-color: #343541;
+    background-color: #10a37f;
+    color: #ffffff;
     align-self: flex-end;
     margin-left: auto;
 }
 
 .message.assistant {
     background-color: #444654;
+    color: #ffffff;
+}
+
+.message-content {
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.message-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.copy-button,
+.edit-button {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #ffffff;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.copy-button:hover,
+.edit-button:hover {
+    background: rgba(255,255,255,0.14);
+}
+
+.code-block {
+    background: #1e1e2b;
+    border: 1px solid #5c5c72;
+    padding: 12px;
+    border-radius: 12px;
+    overflow-x: auto;
+    margin-top: 10px;
+}
+
+.code-block code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    font-size: 13px;
+    color: #d4d4dc;
 }
 
 .input-area {
+    display: flex;
+    padding: 20px;
+    border-top: 1px solid #4d4d4f;
+}
     display: flex;
     padding: 20px;
     border-top: 1px solid #4d4d4f;
