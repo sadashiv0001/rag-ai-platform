@@ -1,8 +1,11 @@
 fastapi
-uvicorn
+uvicorn[standard]
 openai
 openai-whisper
-faiss-cpu
+pgvector
+psycopg2-binary
+sqlalchemy
+alembic
 tiktoken
 python-dotenv
 pydantic

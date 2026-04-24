@@ -8,13 +8,37 @@ services:
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=postgresql://rag_user:rag_password@postgres:5432/rag_db
       - QUERY_CACHE_TTL=3600
       - EMBEDDING_MODEL=text-embedding-3-small
       - LLM_MODEL=gpt-4o-mini
     depends_on:
       - redis
+      - postgres
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
 
   redis:
     image: redis:7-alpine
     ports:
       - '6379:6379'
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      - POSTGRES_DB=rag_db
+      - POSTGRES_USER=rag_user
+      - POSTGRES_PASSWORD=rag_password
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  frontend:
+    build: ./frontend
+    ports:
+      - '3000:80'
+    depends_on:
+      - app
+
+volumes:
+  postgres_data:

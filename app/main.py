@@ -13,6 +13,7 @@ from app.services.rag_pipeline import (
     evaluate_queries,
 )
 from app.services.file_processor import process_file
+from app.services.chat_service import create_session, add_message, get_chat_history
 from app.config import LOG_LEVEL
 
 logging.basicConfig(level=LOG_LEVEL, format="%(asctime)s | %(levelname)s | %(name)s | %(message)s")
@@ -174,4 +175,34 @@ def ask_question(q: str, stream: bool = False):
 def evaluate(queries: List[EvaluationItem]):
     logger.info("Running evaluation hook for %s questions", len(queries))
     return evaluate_queries([query.dict() for query in queries])
+
+
+@app.post("/chat/session")
+def create_chat_session():
+    session_id = create_session()
+    return {"session_id": session_id}
+
+
+@app.get("/chat/history/{session_id}")
+def get_history(session_id: str):
+    history = get_chat_history(session_id)
+    return {"history": history}
+
+
+@app.post("/chat/query")
+def chat_query(session_id: str, q: str, stream: bool = False):
+    add_message(session_id, "user", q)
+    
+    if stream:
+        def stream_with_save():
+            full_answer = ""
+            for chunk in query_rag_stream(q):
+                full_answer += chunk
+                yield chunk
+            add_message(session_id, "assistant", full_answer)
+        return StreamingResponse(stream_with_save(), media_type="text/plain")
+
+    answer = query_rag(q)
+    add_message(session_id, "assistant", answer)
+    return {"answer": answer}
 

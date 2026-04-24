@@ -25,10 +25,11 @@ A robust Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenA
    cp .env.example .env
    ```
 
-2. Set your OpenAI API key in `.env`:
+2. Set your OpenAI API key and database URL in `.env`:
 
    ```text
    OPENAI_API_KEY=your_openai_api_key_here
+   DATABASE_URL=postgresql://rag_user:rag_password@localhost:5432/rag_db
    ```
 
 3. Create and activate a Python virtual environment, then install dependencies:
@@ -46,7 +47,13 @@ A robust Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenA
    uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
    ```
 
-5. Or run using Docker Compose:
+5. Or run using Docker Compose (recommended):
+
+   ```bash
+   docker compose up --build
+   ```
+
+6. Open your browser to `http://localhost:3000` for the ChatGPT-like web interface.
 
    ```bash
    docker compose up --build
@@ -56,11 +63,14 @@ A robust Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenA
 
 ## Endpoints
 
-- Web interface: `GET /`
+- Web interface: `http://localhost:3000`
 - Upload a single document: `POST /upload`
 - Upload multiple documents: `POST /ingest`
 - Query the RAG service: `GET /query?q=your+question`
 - Stream a long-form response: `GET /query?q=your+question&stream=true`
+- Create chat session: `POST /chat/session`
+- Get chat history: `GET /chat/history/{session_id}`
+- Chat query with history: `POST /chat/query?session_id={id}&q=your+question`
 - Run an evaluation hook: `POST /evaluate`
 
 ## Supported File Types
@@ -74,13 +84,14 @@ A robust Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenA
 
 ## Production Features
 
-- RAG-based architecture
-- Vector search (FAISS)
+- RAG-based architecture with persistent vector storage (PostgreSQL + pgvector)
+- Chat history and session management
+- Vector search (pgvector)
 - Redis caching (low latency)
-- Dockerized deployment
+- Dockerized deployment with isolated frontend
 - Streaming support
 - Modular microservice design
-- Web-based chat interface
+- ChatGPT-like web interface
 - Multi-format document ingestion
 - Audio transcription
 
@@ -92,9 +103,10 @@ A robust Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenA
 
 ## Notes
 
-- Document ingestion splits text into chunks and indexes them in FAISS.
+- Document ingestion splits text into chunks and stores embeddings in PostgreSQL with pgvector.
+- Chat history is persisted in PostgreSQL for session continuity.
 - Redis is used for query caching and low-latency repeat responses.
 - Streaming responses are supported via the `/query?stream=true` endpoint.
-- The web interface allows easy file uploads and chatting.
-- Restarting the app clears the in-memory FAISS index, but cached query results remain in Redis.
+- The web interface at `http://localhost:3000` provides a ChatGPT-like experience with chat history.
+- Restarting the app preserves documents and chat history in PostgreSQL.
 - If you encounter "AI service unavailable" messages, it means the OpenAI API quota is exceeded. Please check your API key and billing, or use a different key.
