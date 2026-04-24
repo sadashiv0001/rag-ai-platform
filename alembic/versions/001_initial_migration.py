@@ -34,7 +34,7 @@ def upgrade() -> None:
     op.create_table('documents',
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('content', sa.Text(), nullable=True),
-        sa.Column('metadata', sa.Text(), nullable=True),
+        sa.Column('metadata_json', sa.Text(), nullable=True),
         sa.Column('embedding', Vector(1536), nullable=True),
         sa.PrimaryKeyConstraint('id')
     )

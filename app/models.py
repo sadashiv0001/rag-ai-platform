@@ -13,7 +13,7 @@ class Document(Base):
     __tablename__ = "documents"
     id = Column(Integer, primary_key=True, index=True)
     content = Column(Text)
-    metadata = Column(Text)  # JSON string
+    metadata_json = Column(Text)  # JSON string
     embedding = Column(Vector(VECTOR_DIM))
 
 class ChatSession(Base):

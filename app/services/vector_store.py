@@ -16,7 +16,7 @@ class VectorStore:
             for emb, meta in zip(embeddings, metadata):
                 doc = Document(
                     content=meta.get("content", ""),
-                    metadata=json.dumps(meta),
+                    metadata_json=json.dumps(meta),
                     embedding=emb
                 )
                 db.add(doc)
@@ -32,7 +32,7 @@ class VectorStore:
         try:
             # Use cosine similarity or L2 distance
             results = db.query(Document).order_by(Document.embedding.cosine_distance(query_embedding)).limit(k).all()
-            return [{"content": doc.content, **json.loads(doc.metadata)} for doc in results]
+            return [{"content": doc.content, **json.loads(doc.metadata_json)} for doc in results]
         except Exception as e:
             logger.error(f"Error searching vector store: {e}")
             return []
