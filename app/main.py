@@ -20,7 +20,6 @@ logger = logging.getLogger("rag_ai_platform")
 app = FastAPI(title="rag-ai-platform")
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
-templates = Jinja2Templates(directory="app/templates")
 
 
 class EvaluationItem(BaseModel):
@@ -29,8 +28,111 @@ class EvaluationItem(BaseModel):
 
 
 @app.get("/", response_class=HTMLResponse)
-async def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+def home():
+    return """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG AI Platform</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .upload-section { margin-bottom: 20px; }
+        .chat-section { margin-top: 20px; }
+        .message { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .user { background-color: #e3f2fd; }
+        .bot { background-color: #f5f5f5; }
+        #chat-messages { height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }
+        input[type="text"] { width: 70%; padding: 10px; }
+        button { padding: 10px 20px; margin-left: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>RAG AI Platform</h1>
+
+        <div class="upload-section">
+            <h2>Upload Documents</h2>
+            <input type="file" id="file-input" multiple accept=".pdf,.xlsx,.xls,.txt,.mp3,.wav,.m4a,.flac">
+            <button onclick="uploadFiles()">Upload</button>
+            <p id="upload-status"></p>
+        </div>
+
+        <div class="chat-section">
+            <h2>Chat</h2>
+            <div id="chat-messages"></div>
+            <input type="text" id="message-input" placeholder="Ask a question..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">Send</button>
+            <button onclick="clearChat()">Clear Chat</button>
+        </div>
+    </div>
+
+    <script>
+        async function uploadFiles() {
+            const files = document.getElementById('file-input').files;
+            if (files.length === 0) {
+                alert('Please select files to upload.');
+                return;
+            }
+
+            const formData = new FormData();
+            for (let file of files) {
+                formData.append('files', file);
+            }
+
+            try {
+                const response = await fetch('/ingest', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                document.getElementById('upload-status').textContent = `Uploaded ${result.doc_ids.length} documents successfully.`;
+            } catch (error) {
+                document.getElementById('upload-status').textContent = 'Upload failed: ' + error.message;
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage('user', message);
+            input.value = '';
+
+            try {
+                const response = await fetch(`/query?q=${encodeURIComponent(message)}`);
+                const result = await response.json();
+                addMessage('bot', result.answer);
+            } catch (error) {
+                addMessage('bot', 'Error: ' + error.message);
+            }
+        }
+
+        function addMessage(sender, text) {
+            const messages = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function clearChat() {
+            document.getElementById('chat-messages').innerHTML = '';
+        }
+    </script>
+</body>
+</html>
+"""
 
 
 @app.post("/upload")

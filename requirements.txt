@@ -12,4 +12,5 @@ redis
 PyPDF2 
 openpyxl 
 pandas 
+jinja2
 

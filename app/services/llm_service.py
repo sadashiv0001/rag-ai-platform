@@ -19,13 +19,16 @@ Question:
 
 def generate_answer(context, query):
     prompt = build_prompt(context, query)
-    response = client.chat.completions.create(
-        model=LLM_MODEL,
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.3,
-    )
-
-    return response.choices[0].message.content
+    try:
+        response = client.chat.completions.create(
+            model=LLM_MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3,
+        )
+        return response.choices[0].message.content
+    except Exception as exc:
+        logger.warning("OpenAI LLM failed: %s. Using dummy response.", exc)
+        return f"Dummy response for: {query}"
 
 
 def generate_answer_stream(context, query):
