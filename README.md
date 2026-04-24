@@ -1,6 +1,6 @@
 # rag-ai-platform
 
-A robust Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenAI embeddings, FAISS vector search, Redis caching, and Docker deployment. Supports PDF, Excel, audio transcription, and web-based chat interface.
+A Dockerized Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenAI embeddings, PostgreSQL + pgvector, Redis caching, and an isolated frontend. Supports PDF, Excel, CSV, PLT, and text uploads with chat session memory.
 
 ## Project structure
 
@@ -53,13 +53,9 @@ A robust Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenA
    docker compose up --build
    ```
 
-6. Open your browser to `http://localhost:3000` for the ChatGPT-like web interface.
+6. Open your browser to `http://localhost:3000` for the ChatGPT-like frontend.
 
-   ```bash
-   docker compose up --build
-   ```
-
-6. Open your browser to `http://localhost:8000` for the web interface.
+7. The backend is available at `http://localhost:8000`.
 
 ## Endpoints
 
@@ -78,8 +74,7 @@ A robust Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenA
 - **PDF**: Text extraction from PDF documents
 - **Excel**: Text extraction from .xlsx and .xls files
 - **CSV**: Text extraction from .csv files
-- **PLT**: Text extraction from .plt files (GPS tracks, HPGL, etc.)
-- **Audio**: Transcription using OpenAI Whisper (.mp3, .wav, .m4a, .flac)
+- **PLT**: Text extraction from .plt files
 - **Text**: Plain text files (.txt)
 
 ## Production Features
@@ -93,7 +88,6 @@ A robust Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenA
 - Modular microservice design
 - ChatGPT-like web interface
 - Multi-format document ingestion
-- Audio transcription
 
 ## Performance Optimizations
 
