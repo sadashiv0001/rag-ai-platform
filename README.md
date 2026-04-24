@@ -1,14 +1,16 @@
 # rag-ai-platform
 
-A robust Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenAI embeddings, FAISS vector search, Redis caching, and Docker deployment.
+A robust Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenAI embeddings, FAISS vector search, Redis caching, and Docker deployment. Supports PDF, Excel, audio transcription, and web-based chat interface.
 
 ## Project structure
 
 - `app/`
   - `main.py` - FastAPI API with upload, ingest, query, and evaluation endpoints
   - `config.py` - environment-driven configuration and logging setup
-  - `services/` - document ingestion, vector store, caching, LLM generation, and evaluation hooks
+  - `services/` - document ingestion, vector store, caching, LLM generation, file processing, and evaluation hooks
   - `utils/` - text chunking utilities
+  - `templates/` - HTML templates for web interface
+  - `static/` - static files for web interface
 - `requirements.txt` - Python dependencies
 - `.env.example` - sample environment variables
 - `Dockerfile` - container image build definition
@@ -50,39 +52,23 @@ A robust Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenA
    docker compose up --build
    ```
 
+6. Open your browser to `http://localhost:8000` for the web interface.
+
 ## Endpoints
 
-- Upload a single document:
+- Web interface: `GET /`
+- Upload a single document: `POST /upload`
+- Upload multiple documents: `POST /ingest`
+- Query the RAG service: `GET /query?q=your+question`
+- Stream a long-form response: `GET /query?q=your+question&stream=true`
+- Run an evaluation hook: `POST /evaluate`
 
-  ```bash
-  curl -X POST "http://127.0.0.1:8000/upload" -F "file=@app/data/sample.txt"
-  ```
+## Supported File Types
 
-- Upload multiple documents:
-
-  ```bash
-  curl -X POST "http://127.0.0.1:8000/ingest" -F "files=@app/data/sample.txt" -F "files=@app/data/another.txt"
-  ```
-
-- Query the RAG service:
-
-  ```bash
-  curl "http://127.0.0.1:8000/query?q=your+question"
-  ```
-
-- Stream a long-form response:
-
-  ```bash
-  curl "http://127.0.0.1:8000/query?q=your+question&stream=true"
-  ```
-
-- Run an evaluation hook:
-
-  ```bash
-  curl -X POST "http://127.0.0.1:8000/evaluate" \
-    -H "Content-Type: application/json" \
-    -d '[{"question":"What is RAG?","expected_answer":"Retrieval-Augmented Generation"}]'
-  ```
+- **PDF**: Text extraction from PDF documents
+- **Excel**: Text extraction from .xlsx and .xls files
+- **Audio**: Transcription using OpenAI Whisper (.mp3, .wav, .m4a, .flac)
+- **Text**: Plain text files (.txt)
 
 ## Production Features
 
@@ -92,6 +78,9 @@ A robust Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenA
 - Dockerized deployment
 - Streaming support
 - Modular microservice design
+- Web-based chat interface
+- Multi-format document ingestion
+- Audio transcription
 
 ## Performance Optimizations
 
@@ -104,4 +93,5 @@ A robust Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenA
 - Document ingestion splits text into chunks and indexes them in FAISS.
 - Redis is used for query caching and low-latency repeat responses.
 - Streaming responses are supported via the `/query?stream=true` endpoint.
+- The web interface allows easy file uploads and chatting.
 - Restarting the app clears the in-memory FAISS index, but cached query results remain in Redis.

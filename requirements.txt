@@ -1,6 +1,7 @@
 fastapi
 uvicorn
 openai
+openai-whisper
 faiss-cpu
 tiktoken
 python-dotenv
@@ -8,3 +9,7 @@ pydantic
 numpy
 python-multipart
 redis
+PyPDF2 
+openpyxl 
+pandas 
+
