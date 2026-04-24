@@ -1,7 +1,6 @@
 fastapi
 uvicorn[standard]
 openai
-openai-whisper
 pgvector
 psycopg2-binary
 sqlalchemy
