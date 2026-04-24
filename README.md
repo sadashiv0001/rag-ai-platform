@@ -67,6 +67,8 @@ A robust Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenA
 
 - **PDF**: Text extraction from PDF documents
 - **Excel**: Text extraction from .xlsx and .xls files
+- **CSV**: Text extraction from .csv files
+- **PLT**: Text extraction from .plt files (GPS tracks, HPGL, etc.)
 - **Audio**: Transcription using OpenAI Whisper (.mp3, .wav, .m4a, .flac)
 - **Text**: Plain text files (.txt)
 
@@ -95,3 +97,4 @@ A robust Retrieval-Augmented Generation (RAG) platform built with FastAPI, OpenA
 - Streaming responses are supported via the `/query?stream=true` endpoint.
 - The web interface allows easy file uploads and chatting.
 - Restarting the app clears the in-memory FAISS index, but cached query results remain in Redis.
+- If you encounter "AI service unavailable" messages, it means the OpenAI API quota is exceeded. Please check your API key and billing.

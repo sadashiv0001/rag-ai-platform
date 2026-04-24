@@ -27,8 +27,8 @@ def generate_answer(context, query):
         )
         return response.choices[0].message.content
     except Exception as exc:
-        logger.warning("OpenAI LLM failed: %s. Using dummy response.", exc)
-        return f"Dummy response for: {query}"
+        logger.warning("OpenAI LLM failed: %s. Using fallback response.", exc)
+        return f"Sorry, the AI service is currently unavailable due to API quota limits. Your question was: '{query}'. Please try again later or contact support."
 
 
 def generate_answer_stream(context, query):
@@ -51,4 +51,4 @@ def generate_answer_stream(context, query):
                     yield f"[error] {error}\n"
     except Exception as exc:
         logger.exception("Streaming generation failed: %s", exc)
-        yield f"Streaming failed: {exc}\n"
+        yield f"Sorry, streaming is currently unavailable due to API quota limits. Your question was: '{query}'. Please try again later.\n"

@@ -55,7 +55,7 @@ def home():
 
         <div class="upload-section">
             <h2>Upload Documents</h2>
-            <input type="file" id="file-input" multiple accept=".pdf,.xlsx,.xls,.txt,.mp3,.wav,.m4a,.flac">
+            <input type="file" id="file-input" multiple accept=".pdf,.xlsx,.xls,.csv,.plt,.txt,.mp3,.wav,.m4a,.flac">
             <button onclick="uploadFiles()">Upload</button>
             <p id="upload-status"></p>
         </div>

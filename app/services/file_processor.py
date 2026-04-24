@@ -21,36 +21,22 @@ def extract_text_from_pdf(file_content: bytes) -> str:
         logger.exception("Failed to extract text from PDF: %s", exc)
         return ""
 
-def extract_text_from_excel(file_content: bytes) -> str:
-    """Extract text from Excel file."""
+def extract_text_from_csv(file_content: bytes) -> str:
+    """Extract text from CSV file."""
     try:
-        df = pd.read_excel(io.BytesIO(file_content))
+        df = pd.read_csv(io.BytesIO(file_content))
         text = df.to_string(index=False)
         return text
     except Exception as exc:
-        logger.exception("Failed to extract text from Excel: %s", exc)
+        logger.exception("Failed to extract text from CSV: %s", exc)
         return ""
 
-def transcribe_audio(file_content: bytes, filename: str) -> str:
-    """Transcribe audio file using OpenAI Whisper."""
+def extract_text_from_plt(file_content: bytes) -> str:
+    """Extract text from PLT file (assuming text-based like GPS tracks or HPGL)."""
     try:
-        # Save to temp file for whisper
-        import tempfile
-        import os
-        with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(filename)[1]) as temp_file:
-            temp_file.write(file_content)
-            temp_file_path = temp_file.name
-
-        # Use OpenAI Whisper API
-        with open(temp_file_path, "rb") as audio_file:
-            transcript = client.audio.transcriptions.create(
-                model="whisper-1",
-                file=audio_file
-            )
-        os.unlink(temp_file_path)
-        return transcript.text
+        return file_content.decode('utf-8', errors='ignore')
     except Exception as exc:
-        logger.exception("Failed to transcribe audio: %s", exc)
+        logger.exception("Failed to extract text from PLT: %s", exc)
         return ""
 
 def process_file(file_content: bytes, filename: str) -> Optional[str]:
@@ -60,6 +46,10 @@ def process_file(file_content: bytes, filename: str) -> Optional[str]:
         return extract_text_from_pdf(file_content)
     elif ext in ['xlsx', 'xls']:
         return extract_text_from_excel(file_content)
+    elif ext == 'csv':
+        return extract_text_from_csv(file_content)
+    elif ext == 'plt':
+        return extract_text_from_plt(file_content)
     elif ext in ['mp3', 'wav', 'm4a', 'flac']:
         return transcribe_audio(file_content, filename)
     elif ext == 'txt':
