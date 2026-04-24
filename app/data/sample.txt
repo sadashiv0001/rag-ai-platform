@@ -1,0 +1,2 @@
+AI is transforming industries by enabling automation and intelligent decision-making.
+RAG systems combine retrieval and generation for better accuracy.

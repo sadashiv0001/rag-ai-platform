@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+openai
+faiss-cpu
+tiktoken
+python-dotenv
+pydantic
+numpy
+python-multipart
+redis
