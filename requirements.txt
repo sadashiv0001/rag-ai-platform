@@ -7,4 +7,3 @@ python-dotenv
 pydantic
 numpy
 python-multipart
-redis
