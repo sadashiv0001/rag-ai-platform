@@ -1,0 +1,25 @@
+{
+  "name": "Your Name",
+  "tagline": "I build production-ready AI products (RAG, APIs, and modern web UIs).",
+  "location": "City, Country",
+  "links": [
+    { "label": "GitHub", "href": "https://github.com/your-handle" },
+    { "label": "LinkedIn", "href": "https://www.linkedin.com/in/your-handle/" },
+    { "label": "Email", "href": "mailto:you@example.com" }
+  ],
+  "skills": [
+    { "group": "Backend", "items": ["FastAPI", "PostgreSQL/pgvector", "Redis", "SQLAlchemy", "Docker"] },
+    { "group": "AI / LLM", "items": ["RAG pipelines", "Embeddings", "Prompting", "Streaming UX", "Evaluation hooks"] },
+    { "group": "Frontend", "items": ["React", "Vite", "UX polish", "APIs integration"] }
+  ],
+  "featuredProjects": [
+    {
+      "name": "RAG AI Platform (this repo)",
+      "description": "Upload documents, ingest into pgvector, and chat with retrieval + session memory.",
+      "highlights": ["Multi-format ingestion", "Redis caching", "Streaming responses", "Dockerized stack"],
+      "ctaLabel": "Try the live demo",
+      "ctaHref": "/demo"
+    }
+  ]
+}
+

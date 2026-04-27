@@ -14,8 +14,11 @@ class VectorStore:
         db: Session = SessionLocal()
         try:
             for emb, meta in zip(embeddings, metadata):
+                # Store chunk text redundantly in `content` for faster reads/debuggability.
+                # Metadata still carries doc_id/chunk_id/etc for citations.
+                chunk_text = meta.get("text") or meta.get("content") or ""
                 doc = Document(
-                    content=meta.get("content", ""),
+                    content=chunk_text,
                     metadata_json=json.dumps(meta),
                     embedding=emb
                 )

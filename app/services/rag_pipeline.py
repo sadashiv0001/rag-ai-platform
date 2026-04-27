@@ -44,13 +44,32 @@ def ingest_documents(texts):
     return doc_ids
 
 
-def query_rag(query, use_cache=True, return_cache=False):
+def _build_sources(relevant_items):
+    sources = []
+    for item in relevant_items:
+        sources.append(
+            {
+                "doc_id": item.get("doc_id"),
+                "chunk_id": item.get("chunk_id"),
+                "preview": (item.get("text") or item.get("content") or "")[:240],
+            }
+        )
+    return sources
+
+
+def query_rag(query, use_cache=True, return_cache=False, include_sources=False):
     if not query or not query.strip():
+        if include_sources:
+            empty = {"answer": "Please provide a question to ask.", "sources": []}
+            return (empty, False) if return_cache else empty
         return ("Please provide a question to ask.", False) if return_cache else "Please provide a question to ask."
 
     cached_answer = get_cached_answer(query) if use_cache else None
     if cached_answer is not None:
         logger.info("Cache hit for query: %s", query)
+        if include_sources:
+            payload = {"answer": cached_answer, "sources": [], "cache_hit": True}
+            return (payload, True) if return_cache else payload
         return (cached_answer, True) if return_cache else cached_answer
 
     query_embedding = get_embeddings([query])[0]
@@ -58,15 +77,21 @@ def query_rag(query, use_cache=True, return_cache=False):
 
     if not relevant_items:
         logger.info("No relevant content for query: %s", query)
+        if include_sources:
+            payload = {"answer": "No relevant content found. Please ingest a document first.", "sources": []}
+            return (payload, False) if return_cache else payload
         return ("No relevant content found. Please ingest a document first.", False) if return_cache else "No relevant content found. Please ingest a document first."
 
-    context = "\n\n".join([item["text"] for item in relevant_items])
+    context = "\n\n".join([(item.get("text") or item.get("content") or "") for item in relevant_items])
     answer = generate_answer(context, query)
 
     if use_cache:
         set_cached_answer(query, answer)
 
     logger.info("Query processed; retrieved %s chunks.", len(relevant_items))
+    if include_sources:
+        payload = {"answer": answer, "sources": _build_sources(relevant_items), "cache_hit": False}
+        return (payload, False) if return_cache else payload
     return (answer, False) if return_cache else answer
 
 
